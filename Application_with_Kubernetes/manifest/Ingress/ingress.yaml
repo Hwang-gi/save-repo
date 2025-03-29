@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web-svc
+                port:
+                  number: 80
+          - path: /sign
+            pathType: Prefix
+            backend:
+              service:
+                name: websign-svc
+                port:
+                  number: 80
+          - path: /order
+            pathType: Prefix
+            backend:
+              service:
+                name: weborder-svc
+                port:
+                  number: 80
+          - path: /was
+            pathType: Prefix
+            backend:
+              service:
+                name: was-svc
+                port:
+                  number: 8080

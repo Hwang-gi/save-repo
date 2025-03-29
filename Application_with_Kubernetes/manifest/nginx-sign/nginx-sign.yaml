@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 1st-websign
+  labels:
+    sign: sign-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      sign: sign-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+       sign: sign-app
+    spec:
+      containers:
+      - image: hwanggc19/frontend-signup:v1.0
+        name: sign
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: 100Mi
+            cpu: 100m
+        livenessProbe:
+          httpGet:
+            path: /signup.jsp
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /signup.jsp
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: pvcsign
+          mountPath: /1st-websign
+      volumes:
+      - name: pvcsign
+        persistentVolumeClaim:
+          claimName: pvcsign
+      nodeSelector:
+        sign: sign-app
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: websign-svc
+spec:
+  selector:
+    sign: sign-app
+  type: NodePort
+  clusterIP: 10.100.100.110
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      #nodePort: 32000
