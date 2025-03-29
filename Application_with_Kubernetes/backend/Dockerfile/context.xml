@@ -20,6 +20,6 @@
               maxWaitMillis="10000"
               username="jinwoo"
               password="1234"
-              driverClassName="com.mysql.cj.jdbc.Driver"
+              driverClassName="org.mariadb.jdbc.Driver"
               url="jdbc:mysql://10.100.0.120:3306/cafe"/>
 </Context>
